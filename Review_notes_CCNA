@@ -1,0 +1,23 @@
+Additional notes during review process (include new things learned or bits of information that is useful for future reference).
+
+VTP v1/v2 : VTP Transparent will only forward VTP if the domain is the same and the VTP version is the same.
+CDP v1 vs. v2 : V2 will pass more robust info including vlan info when dealing with swithches
+CDP vs. LLDP : CDP uses S for switches, and LLDP uses B for Switches (bridges)
+LLDP = 802.1ab
+LACP = 802.3ad
+PortChannel = all ports must be using the same speed and duplex settings to participate (bundle).
+Port-channel load balance uses src-mac by default
+Static routes using the egress interface : this requires ARP overhead , specially Proxy ARP (recommended not use on Ethernet segments, Serial interfaces it is okay to use).
+Proxy ARP : It assumes that the host is in the connected subnet, so for every routing using the above, it will send an ARP request on the segment and added to the ARP table (this will create a lot of extra overhead).
+OSPF: To form adjecencies these need to match ( Hello timer, dead timer, OSPF area, OSPF authentication details if ocnifgured, subnet, MTU, network types, router Id must be unique)
+OSPF: DR/BDR section  order : Priority > if equal then highest router ID (router ID is chosen in order of config, high loop, then highest physical ip). If an interface is down, the Router will not use it as a Router ID (remember this)
+OSPF: Recommended to use loopback for Router ID as per Cisco (more estable since loopback is always up)
+OSPF : port priorty for DR/BDR, higher priority priority wins for becoming DR though note that if give a higher priority to a a different router interface, and clear ospf process on both (DR/BDR)and router with highest priority to make sure changes go through as you wanted
+HSRP/VRRP/BLGP can be configured on any routed interface (physical or logical)
+HSRP v1 vs. v2: Multicast address isnt unique /doesnt support Ipv6 in v1. V2 does everything v1 doesnt including adding times in msc.
+HSRP default times : hello 3 sec, holdtime 10
+HSRP/VRRP:  standby/active is chosen based on highest priority. If tie, the highest IP address wins.
+HSRP/VRRP: changing priority to higher than active will only force a new standby router deicison, not active. You must enable pre-empt (sends a coup HSRP message) or the active router link has to fail.
+HSRP/VRRP: VRRP allows you to set the virtual IP equal to a physical interface IP. IF that router/switch l3 has the IP it automaically becomes the Master (priority is set to 255). This isnt possible with HSRP.
+HSRP/VRRP: VRRP default times is hello 1 sec, and holdtime around 3 sec.
+HSSRP/VVRP: HSRP offers tracking of an interface automaically.For VRRP, this has to be setup using he track command (track 1 int f0/1 line-protocol, then followed by vrrp 3 track 1 decrement 50)
